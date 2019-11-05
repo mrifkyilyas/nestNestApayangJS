@@ -1,4 +1,4 @@
-import { UseInterceptors, UsePipes, Headers, UseGuards, Controller, Get, Post, Body, HttpException, HttpStatus, UseFilters, Header } from '@nestjs/common';
+import { UseInterceptors, Inject, forwardRef, UsePipes, Headers, UseGuards, Controller, Get, Post, Body, HttpException, HttpStatus, UseFilters, Header } from '@nestjs/common';
 import { ProductService } from './products.services'
 import { CreateProductsDto } from './dto/create-products.dto'
 import { HttpExceptionFilter } from '../common/http-exception.filter'
@@ -6,7 +6,7 @@ import { JoiValidationPipe } from '../common/joi-validation.pipe'
 import { Roles } from '../common/roles.decorator'
 import { RolesGuard } from '../common/roles.guard'
 import { LoggingInterceptor } from '../common/logging.inteception'
-import {isLogin} from '../common/isLogin.decorator'
+import { isLogin } from '../common/isLogin.decorator'
 
 @Controller('products')
 @UseGuards(RolesGuard)
@@ -24,7 +24,7 @@ export class ProductsController {
     @Get('verify')
     async getUser(@Headers() headers: any) {
         console.log(headers);
-        return ['yo', 'spain', 'friend'];
+        return ''
     }
 
     @Get('interception')
@@ -36,7 +36,7 @@ export class ProductsController {
     @Roles('admin')
     // @UsePipes(new JoiValidationPipe(CreateProductsDto))
     // @UseFilters(new HttpExceptionFilter())
-    create(@Body() createProductsDto: CreateProductsDto, ) {
+    create(@Body() createProductsDto: CreateProductsDto ) {
 
         return this.productService.create(createProductsDto)
     }
