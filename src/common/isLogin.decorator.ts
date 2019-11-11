@@ -1,6 +1,6 @@
 import { createParamDecorator } from '@nestjs/common';
 
-export const isLogin = createParamDecorator((data, req) => {
-  return data ? req.isLogin && req.isLogin[data] : req.isLogin;
+export const userLogin = createParamDecorator((data, req) => {
+  return data ? req.userLogin && req.userLogin[data] : req.userLogin;
 });
 

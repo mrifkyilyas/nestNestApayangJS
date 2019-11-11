@@ -9,4 +9,19 @@ export class CreateProductsDto {
     readonly description: string;
     @IsInt()
     readonly price: number
+    @IsString()
+    readonly userId:string
+}
+
+export class EditProductsDto {
+    @IsString()
+    readonly name: string;
+    @IsInt()
+    readonly quantity: number;
+    @IsString()
+    readonly description: string;
+    @IsInt()
+    readonly price: number
+    @IsString()
+    readonly userId:string
 }

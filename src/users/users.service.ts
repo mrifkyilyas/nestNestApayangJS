@@ -1,12 +1,10 @@
 import { Model } from 'mongoose';
 import { Injectable, Inject, forwardRef, HttpStatus, HttpException } from "@nestjs/common";
 import { Users } from './interfaces/users.interface'
-import { InjectModel } from '@nestjs/mongoose';
 import { CreateUsersDto } from './dto/create-users.dto'
 import { LoginUsersDto } from './dto/login-users.dto'
-import { JwtService } from '@nestjs/jwt'
 import { AuthService } from '../auth/auth.service'
-import { HttpExceptionFilter } from '../common/http-exception.filter'
+
 
 
 
@@ -18,8 +16,7 @@ export class UsersService {
     ) { }
     async register(createUsersDto: CreateUsersDto): Promise<Users> {
         const newUser = await new this.usersModel(createUsersDto)
-        console.log(newUser)
-        return newUser.save()
+        return newUser.save()              
     }
 
     async findOne(name: string): Promise<Users | undefined> {
@@ -38,7 +35,6 @@ export class UsersService {
             }
         } catch (error) {
             throw new HttpException('password salah', HttpStatus.BAD_REQUEST);
-
         }
     }
 }

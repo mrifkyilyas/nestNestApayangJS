@@ -7,19 +7,27 @@ import { JoiValidationPipe } from '../common/joi-validation.pipe'
 import { Roles } from '../common/roles.decorator'
 import { RolesGuard } from '../common/roles.guard'
 import { LoggingInterceptor } from '../common/logging.inteception'
-import { isLogin } from '../common/isLogin.decorator'
-// import {} from ''
+import { userLogin } from '../common/isLogin.decorator'
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('users')
 export class usersController {
     constructor(private readonly usersService: UsersService) { }
 
-
-    @Post('/register')
-    register(@Body() createUsersDto: CreateUsersDto) {
-        console.log(createUsersDto)
+    @Post('/register/kucing')
+    registerKucing(@Body() createUsersDto: CreateUsersDto): any {
+        const role = 'kucing'
+        createUsersDto = { ...createUsersDto, role }
         return this.usersService.register(createUsersDto)
     }
+
+    @Post('/register/anjing')
+    registerAnjing(@Body() createUsersDto: CreateUsersDto) {
+        const role = 'anjing'
+        createUsersDto = { ...createUsersDto, role }
+        return this.usersService.register(createUsersDto)
+    }
+
 
     @Post('/login')
     login(@Body() LoginUsersDto: LoginUsersDto) {
