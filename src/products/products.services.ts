@@ -59,67 +59,85 @@ export class ProductService {
     }
 
     async aggregationGet(): Promise<any> {
-        // let agg = this.productsModel.aggregate([
-        //     {
-        //         $lookup: {
-        //             from: "cats",
-        //             localField: "owner",
-        //             foreignField: "_id",
-        //             as: "ownerCats"
-        //         },
-        //     },
-        //     {
-        //         $lookup: {
-        //             from: "dogs",
-        //             localField: "owner",
-        //             foreignField: "_id",
-        //             as: "ownerDogs"
-        //         },
-        //     },
-        //     { $unwind: { path: "$ownerCats", preserveNullAndEmptyArrays: true } },
-        //     { $unwind: { path: "$ownerDogs", preserveNullAndEmptyArrays: true } },
-        //     {
-        //         $group:
-        //         {
-        //             _id: {
-        //                 _id: "$_id",
-        //             },
+        let agg = this.productsModel.aggregate([
+            {
+                $lookup: {
+                    from: "cats",
+                    localField: "owner",
+                    foreignField: "_id",
+                    as: "ownerCats"
+                },
+            },
+            {
+                $lookup: {
+                    from: "dogs",
+                    localField: "owner",
+                    foreignField: "_id",
+                    as: "ownerDogs"
+                },
+            },
 
-        //             owner: { $push: { _id: "$owner", type: "$onModel", name: "$owner.userName" } }
-        //         }
+            {
+                $addFields: {
+                    owner:
+                        { "$setUnion": ["$ownerDogs", "$ownerCats"] },
+                }
+            },
+            {
+                $group:
+                {
+                    _id: {
+                        owner: "$owner",
+                        type: "$onModel",
+                        name: { $arrayElemAt: ["$owner.name", 0] },
+                    },
+                    products: {
+                        $push: {
+                            _id: "$_id", 
+                            name: "$name", 
+                            price: "$price", 
+                            quality: "$quality",
+                            description: "$description"
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0, type: '$_id.type', name: '$_id.name', products: "$products"
+                }
+            }
+        ])
+        return agg
+
+
+        // let agg = this.catsModel.aggregate([{
+        //     $lookup: {
+        //         from: "products",
+        //         localField: "_id",
+        //         foreignField: "owner",
+        //         as: "products"
+        //     },
+        // }, {
+        //     $addFields: {
+        //         type: "$products.onModel"
         //     }
-        // ])
+        // },])
 
-        // return agg
+        // let agg2 = this.dogsModel.aggregate([{
+        //     $lookup: {
+        //         from: "products",
+        //         localField: "_id",
+        //         foreignField: "owner",
+        //         as: "products"
+        //     },
+        // }, {
+        //     $addFields: {
+        //         type: "$onModel.products"
+        //     }
+        // },])
+        // let [dog, cat] = await Promise.all([agg, agg2])
 
-
-        let agg = this.catsModel.aggregate([{
-            $lookup: {
-                from: "products",
-                localField: "_id",
-                foreignField: "owner",
-                as: "products"
-            },
-        }, {
-            $addFields: {
-                type: "$proucts.onModel"
-            }
-        },])
-
-        let agg2 = this.dogsModel.aggregate([{
-            $lookup: {
-                from: "products",
-                localField: "_id",
-                foreignField: "owner",
-                as: "products"
-            },
-        }, {
-            $addFields: {
-                type: "$onModel.products"
-            }
-        },])
-        let [dog, cat] = await Promise.all([agg, agg2])
-
-        return dog.concat(cat)
+        // return dog.concat(cat)
     }
 }
