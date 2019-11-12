@@ -1,4 +1,4 @@
-import { UseInterceptors, Param, Inject, forwardRef, UsePipes, Headers, UseGuards, Controller, Get, Post, Body, HttpException, HttpStatus, UseFilters, Header, Put } from '@nestjs/common';
+import { UseInterceptors, Param, Inject, forwardRef, UsePipes, Headers, UseGuards, Controller, Get, Post, Body, HttpException, HttpStatus, UseFilters, Header, Put, Delete } from '@nestjs/common';
 import { ProductService } from './products.services'
 import { CreateProductsDto, EditProductsDto } from './dto/create-products.dto'
 import { HttpExceptionFilter } from '../common/http-exception.filter'
@@ -34,13 +34,23 @@ export class ProductsController {
 
     @Post()
     create(@Body() createProductsDto: CreateProductsDto, @userLogin() user: any): any {
-        console.log(createProductsDto,'ini product di controller')
+        console.log(createProductsDto, 'ini product di controller')
         return this.productService.create(createProductsDto, user)
     }
 
     @Get('agg')
-    GetAggreagation():any{
+    GetAggreagation(): any {
         return this.productService.aggregationGet()
+    }
+
+    @Delete()
+    deleteAll(): any {
+        return this.productService.deleteAll()
+    }
+
+    @Delete(':id')
+    deleteById(@Param() idProduct: string): any {
+        return this.productService.deleteById(idProduct)
     }
 
 
@@ -55,7 +65,7 @@ export class ProductsController {
     //     return id
     // }
 
-   
+
     // @Get('error')
     // error(): any {
     //     throw new HttpException('Not_Found', HttpStatus.NOT_FOUND);

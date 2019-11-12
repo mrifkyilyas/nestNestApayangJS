@@ -42,10 +42,21 @@ export class ProductService {
         return newProducts
     }
 
-    // async update(updateProductsDto: EditProductsDto, id: string):Promise<Products> {
-    //     return 
+    async deleteAll(): Promise<any> {
+        try {
+            return await this.productsModel.deleteMany()
+        } catch (error) {
+            throw error
+        }
+    }
 
-    // }
+    async deleteById(id: string): Promise<any> {
+        try {
+            return await this.productsModel.deleteById(id)
+        } catch (error) {
+            throw error
+        }
+    }
 
     async updateProduct(productId, updateProductsDto: EditProductsDto): Promise<Products> {
         console.log(productId, 'ini product id')

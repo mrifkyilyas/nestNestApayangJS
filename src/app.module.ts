@@ -13,11 +13,14 @@ import { RolesGuard } from './common/roles.guard'
 import { CatsModule } from './cats/cats.modules';
 import { DogsModule } from './dogs/dogs.modules';
 import { AnimalModule } from './animal/animal.module';
+import { AccountModule } from './account/account.module';
+import { TransactionController } from './transaction/transaction.controller';
+import { TransactionModule } from './transaction/transaction.module';
 
 @Module({
   imports: [
-    ProductModule, UsersModule, AuthModule, CatsModule, DogsModule, AnimalModule],
-  controllers: [AppController],
+    ProductModule, UsersModule, AuthModule, CatsModule, DogsModule, AnimalModule, AccountModule, TransactionModule],
+  controllers: [AppController,],
   providers: [AppService,
     // {
     //   provide: APP_FILTER,
