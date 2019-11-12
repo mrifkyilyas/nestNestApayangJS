@@ -21,7 +21,8 @@ export class AuthService {
 
     async validateUser(name: string, password: string): Promise<any> {
         const user = await this.usersService.findOne(name);
-        if (user && user.password == password) {
+        console.log('masuk sini')
+        if (user && this.bcryptCompare(password, user.password)) {
             const { password, ...result } = user;
             return result;
         }
@@ -34,7 +35,10 @@ export class AuthService {
     }
 
     async bcryptCompare(password: string, passwordHash: string): Promise<any> {
-        return bcrypt.compareSync(password, passwordHash)
+
+        let a = await bcrypt.compareSync(password, passwordHash)
+        console.log('masuk sini',a)
+        return a
     }
 
 }

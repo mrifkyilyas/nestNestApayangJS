@@ -93,9 +93,9 @@ export class ProductService {
                     },
                     products: {
                         $push: {
-                            _id: "$_id", 
-                            name: "$name", 
-                            price: "$price", 
+                            _id: "$_id",
+                            name: "$name",
+                            price: "$price",
                             quality: "$quality",
                             description: "$description"
                         }

@@ -24,12 +24,14 @@ export class CatsService {
   async create(createCats: CreateCats):
     Promise<Cats> {
     try {
-      const { name, color, health, age } = createCats
+      const { name, color, health, age, password, userName } = createCats
       let newCat = await this.catsModel.create({
         name,
         color,
         health,
-        age
+        age,
+        password,
+        userName
       })
       return newCat
     } catch (error) {
@@ -79,13 +81,23 @@ export class CatsService {
     } catch (error) {
       return error
     }
+
+    // try {
+    //   let bulk = this.catsModel.initializeOrderedBulkOp()
+    //   data.map((datum) => {
+    //     bulk.insert(datum)
+    //   })
+    //   return bulk.execute()
+    // } catch (error) {
+    //   return error
+    // }// not support? 
   }
 
   async login(loginCats: LoginCats): Promise<any> {
     const { userName, password } = loginCats
     try {
       let found = await this.catsModel.findOne({ userName })
-      if (found && found.password == password) {
+      if ((found && await this.authService.bcryptCompare(password, found.password))) {
         found.type = 'Cats'
         return this.authService.login(found)
       } else {

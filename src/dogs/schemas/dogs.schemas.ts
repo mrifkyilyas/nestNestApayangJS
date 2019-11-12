@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose'
+import * as bcrypt from 'bcryptjs'
 import { catsSchema } from '../../cats/schemas/cats.schemas'
 export const dogsSchema = new mongoose.Schema({
     userName: {
@@ -37,4 +38,20 @@ export const dogsSchema = new mongoose.Schema({
     age: Number,
     health: Boolean
 })
+
+dogsSchema.pre('save', function (next) {
+    let temp = bcrypt.hashSync(this.password, bcrypt.genSaltSync(10))
+    this.password = temp
+    next()
+})
+
+dogsSchema.pre('insertMany', function (next) {
+    // let temp = bcrypt.hashSync(this.password, bcrypt.genSaltSync(10))
+    // this.password = temp
+    console.log('masuk middleware insert many',this)
+    next()
+})
+
+
+
 

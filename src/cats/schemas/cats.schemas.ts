@@ -1,5 +1,6 @@
 import * as mongoose from 'mongoose'
 import { dogsSchema } from 'src/dogs/schemas/dogs.schemas'
+import * as bcrypt from 'bcryptjs'
 export const catsSchema = new mongoose.Schema({
     userName: {
         type: String,
@@ -36,4 +37,11 @@ export const catsSchema = new mongoose.Schema({
     color: String,
     age: Number,
     health: Boolean
+})
+
+
+catsSchema.pre('save', function (next) {
+    let temp = bcrypt.hashSync(this.password, bcrypt.genSaltSync(10))
+    this.password = temp
+    next()
 })

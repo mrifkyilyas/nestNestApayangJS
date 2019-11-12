@@ -45,6 +45,7 @@ export class DogsService {
     }
   }
 
+
   async createMany(data: any):
     Promise<any> {
     try {
@@ -61,15 +62,23 @@ export class DogsService {
     } catch (error) {
       return error
     }
+
+    // try {
+    //   let bulk = this.dogsModel.initializeOrderedBulkOp()
+    //   data.map((datum) => {
+    //     bulk.insert(datum)
+    //   })
+    //   return bulk.execute()
+    // } catch (error) {
+    //   return error
+    // } not support?
   }
 
   async login(loginDogs: LoginDogs): Promise<any> {
     const { userName, password } = loginDogs
     try {
       let found = await this.dogsModel.findOne({ userName })
-      if (found && found.password == password) {
-        // found = { ...found, type: 'Dogs' }
-        // console.log(found)
+      if (found && await this.authService.bcryptCompare(password, found.password)) {
         found.type = 'Dogs'
         return this.authService.login(found)
       } else {
@@ -79,5 +88,7 @@ export class DogsService {
       throw new BadRequestException('password salah')
     }
   }
+
+
 
 }

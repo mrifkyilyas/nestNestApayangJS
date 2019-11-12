@@ -11,7 +11,7 @@ export class DogsController {
     return this.dogsService.findAll()
   }
 
-  @Post()
+  @Post('register')
   create(@Body() createDogs: CreateDogs): any {
     return this.dogsService.create(createDogs)
   }
@@ -21,5 +21,7 @@ export class DogsController {
     return this.dogsService.login(loginDogs)
 
   }
+
+
 
 }

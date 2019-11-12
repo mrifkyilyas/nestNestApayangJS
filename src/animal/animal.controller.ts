@@ -24,7 +24,6 @@ export class AnimalController {
     @Post()
     @UseInterceptors(FileInterceptor('upload', {
         fileFilter: (req: Request, file, callback) => {
-            console.log(file.mimetype)
             if (!file.originalname.match(/\.(xlsx)$/)) {
                 callback(new BadRequestException('Only xlsx files are allowed!'), false);
                 return

@@ -11,7 +11,7 @@ export class CatsController {
     return this.catsService.findAll()
   }
 
-  @Post()
+  @Post('register')
   create(@Body() createCats: CreateCats): any {
     return this.catsService.create(createCats)
   }

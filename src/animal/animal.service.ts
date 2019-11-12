@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { CatsService } from '../cats/cats.services';
 import { DogsService } from '../dogs/dogs.services';
+import { AuthService } from 'src/auth/auth.service';
 
 
 
@@ -8,7 +9,8 @@ import { DogsService } from '../dogs/dogs.services';
 export class AnimalService {
     constructor(
         private readonly catsService: CatsService,
-        private readonly dogsService: DogsService
+        private readonly dogsService: DogsService,
+        private readonly authService: AuthService
     ) { }
     async findAll(): Promise<any> {
         try {
@@ -43,16 +45,17 @@ export class AnimalService {
         try {
             let dogs = []
             let cats = []
-            await animal.map((anim, index) => {
-                console.log(anim)
+            await animal.map(async (anim, index) => {
+                let passHash = await this.authService.bcryptHash(`${anim[5]}`)
                 let send = {
                     name: anim[0],
                     color: anim[3],
                     health: anim[2],
                     age: anim[4],
-                    password: `${anim[5]}`,
+                    password:passHash,
                     userName: anim[6]
                 }
+                console.log(send)
                 return index > 0 ? (anim[1] === 'cat') ? cats.push(send) : dogs.push(send) : ''
             })
             let queryDogs = this.dogsService.createMany(dogs)
