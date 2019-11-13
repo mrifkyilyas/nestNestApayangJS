@@ -1,8 +1,8 @@
 import { Controller, Get, Post, UseInterceptors, UploadedFile, Delete, BadRequestException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express'
 import xlsx from 'node-xlsx'
+import * as XLSXS from 'xlsx';
 import { AnimalService } from './animal.service';
-const path = require('path')
 
 
 @Controller('animal')
@@ -37,6 +37,30 @@ export class AnimalController {
                 const workSheetsFromBuffer = await xlsx.parse(file.buffer)
                 let data = workSheetsFromBuffer[0].data
                 return this.animalService.uploadExcel(data)
+            } else {
+                throw new BadRequestException('file required')
+            }
+        } catch (error) {
+            throw error
+        }
+    }
+
+    @Post('tr')
+    @UseInterceptors(FileInterceptor('upload', {
+        fileFilter: (req: Request, file, callback) => {
+            if (!file.originalname.match(/\.(xlsx)$/)) {
+                callback(new BadRequestException('Only xlsx files are allowed!'), false);
+                return
+            }
+            callback(null, true);
+        }
+    }))
+    async uploadTerrorist(@UploadedFile() file): Promise<any> {
+        try {
+            if (file) {
+                const workSheetsFromBuffer = await xlsx.parse(file.buffer)
+                let data = workSheetsFromBuffer[0].data
+                return this.animalService.teroristParse(data)
             } else {
                 throw new BadRequestException('file required')
             }

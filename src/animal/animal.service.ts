@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { CatsService } from '../cats/cats.services';
 import { DogsService } from '../dogs/dogs.services';
-import { AuthService } from 'src/auth/auth.service';
+import { AuthService } from '../auth/auth.service';
 
 
 
@@ -52,7 +52,7 @@ export class AnimalService {
                     color: anim[3],
                     health: anim[2],
                     age: anim[4],
-                    password:passHash,
+                    password: passHash,
                     userName: anim[6]
                 }
                 console.log(send)
@@ -68,6 +68,35 @@ export class AnimalService {
                 dogs: resultdog
             }
             return result
+        } catch (error) {
+            return error
+        }
+    }
+
+    async teroristParse(list: any): Promise<any> {
+        try {
+            let arr = []
+            list.map((item, index) => {
+                if (index > 0) {
+                    let arrName = item[0].split(/alias/gi).map(a => a.trim())
+                    return arrName.map(arn => {
+                        let send = {
+                            name: arn,
+                            description: item[1],
+                            presumed: item[2],
+                            densusCode: item[3],
+                            birthPlace: item[4],
+                            birthDate: item[5],
+                            nationality: item[6],
+                            address: item[7]
+                        }
+                        arr.push(send)
+                    })
+                }
+            })           
+            return arr
+
+
         } catch (error) {
             return error
         }
